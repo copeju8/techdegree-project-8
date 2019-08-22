@@ -1,11 +1,15 @@
 const Sequelize = require('sequelize');  
-const sequelize = new Sequelize({books});
+const sequelize = new Sequelize({Books});
 
     // dialect: 'sqlite',
     // storage: 'library.db'
-class books extends Sequelize.Model{}
-books.init({
-    title: Sequelize.STRING
+class Books extends Sequelize.Model{}
+Books.init({
+    title: Sequelize.STRING,
+    author: Sequelize.STRING,
+    genre: Sequelize.STRING,
+    year: Sequelize.integer,
+    id: Sequelize.integer,
 }, { sequelize });
 
 
@@ -15,7 +19,7 @@ books.init({
 // async IIFE
 (async () => {
 
-await books.sync();
+await Books.sync({ force: true});
 
 try{
 

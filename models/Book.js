@@ -1,4 +1,5 @@
-//Model in sync with db structure
+//Model in sync with db structure with customValidator https://sequelize.org/master/manual/models-definition.html#validations
+
 const Sequelize = require('sequelize');
 
 const connection = new Sequelize('Books');
@@ -16,17 +17,55 @@ module.exports = (sequelize) => {
             type: Sequelize.STRING,
             allowNull: false, // disallow null
             defaultValue: false, //set default value
+            validate: {
+                notNull: {
+                    msg: 'Please provide a value for "title"',
+                },
+                notEmpty: {
+                    msg: ' Error - please re-enter' ,
+                },
+            },
         },
        author: { 
             type: Sequelize.STRING,
             allowNull: false,
             defaultValue: false,
+            validate: {
+                notNull: {
+                    msg: "Please enter an author's name",
+                },   
+                notEmpty: {
+                    msg: "Please provide a value for 'author'",
+                },
+            },    
         },
         genre: {
             type: Sequelize.STRING,
             allowNull: false,  
-            defaultValue: false,  
-        },
+            defaultValue: false,
+            validate: {
+                notNull: {
+                    msg: "Please enter an author's genre",
+                },   
+                notEmpty: {
+                    msg: "Please provide a value for 'genre'",
+                },
+            }, 
+        },    
+        year: {
+            type: Sequelize.INTEGER,
+            allowNull: false,  
+            defaultValue: false,
+            validate: {
+                notNull: {
+                    msg: "Please enter a year - YYYY",
+                },   
+                notEmpty: {
+                    msg: "Please provide a value for 'year'- YYYY",
+                },
+            }, 
+        },    
+
     }, { sequelize });
 
     return Books;

@@ -1,34 +1,39 @@
-const Sequelize = require('sequelize');  
-const sequelize = new Sequelize({Books});
+//Create and retrieve data from db
 
-    // dialect: 'sqlite',
-    // storage: 'library.db'
-class Books extends Sequelize.Model{}
-Books.init({
-    title: Sequelize.STRING,
-    author: Sequelize.STRING,
-    genre: Sequelize.STRING,
-    year: Sequelize.integer,
-    id: Sequelize.integer,
-}, { sequelize });
+'use strict';
+const Sequelize = require('sequelize');
 
+module.exports = (sequelize) => {
+    class Book extends Sequelize.Model {}
+    Books.init({
+        id: {
+            type: Sequelize.INTEGER,
+            primaryKey: true,
+            autoIncrement: true,
+        },
+        title: {
+            type: Sequelize.STRING,
+            allowNull: false,
+        },
+        author: {
+            type: Sequelize.STRING,
+            allowNull: false,
+        },
+        genre: {
+            type: Sequelize.STRING,
+            allowNull: false,
+        },
+        year: {
+            type: Sequelize.INTEGER,
+            allowNull: false,
+        },
+    }, { sequelize });
 
-// const express = require('express');
-// const app = express();
+   //The associate() method is called in the db/index.js file after each model is imported into the Sequelize instance. 
+   //This allows code within the associate() method to access any of the available models.
 
-// async IIFE
-(async () => {
+    Books.associate = (models) =>  {
+       Books.hasMany(models.Books);
+    };
+}
 
-await Books.sync({ force: true});
-
-try{
-
-}   catch(error)    {
-    console.error('Error connecting to the database: ', error);
-    }   
-}) ();
-
-
-const portNumber = 3000;
-app.listen(portNumber);
-console.log("App start on localhost at port" + portNumber);

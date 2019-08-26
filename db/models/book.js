@@ -1,8 +1,9 @@
 //Model in sync with db structure with customValidator https://sequelize.org/master/manual/models-definition.html#validations
+const Sequelize = require('sequelize');
 
-'use strict';
-module.exports = (sequelize, DataTypes) => {
-  const Book = sequelize.define('Book', {
+module.exports = (sequelize) => {
+  class Book extends Sequelize.Model {}
+  Book.init({
     id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
@@ -13,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false, // disallow null
         validate: {
             notEmpty: true, 
+            msg: 'Please provide a title.',
             max: 30
         }
     },
@@ -22,6 +24,7 @@ module.exports = (sequelize, DataTypes) => {
         validate: {
             is: ["^[a-z]+$",'i'],
             notEmpty: true, 
+            msg: 'Please provide a name of an author.',
             max: 25
         }      
     }, 
@@ -36,24 +39,15 @@ module.exports = (sequelize, DataTypes) => {
         type: Sequelize.INTEGER,
         allowNull: false, 
         validate: {
-            isNumeric: true,          
+            isNumeric: true,  
+            msg: 'Please enter a year - format XXXX.',        
         }      
-    } 
-  }, {
-    classMethods: {
-      associate: function(models) {
-        // associations can be defined here
-      }
-    },
-    instanceMethods: {
-      publishedAt: function() {
-        return dateFormat(this.createdAt, "dddd, mmmm dS, yyyy, h:MM TT");
-      },
-      shortDescription: function(){ 
-        return this.body.length > 30 ? this.body.substr(0, 30) + "..." : this.body;
-      }
-    }
-  });
-  return Book;
-  v
-};
+    }, 
+   // Model options object
+    book: 'my_movies_table', // table name change
+    sequelize 
+  },
+    }, { sequelize });
+  
+    return Book;
+};  

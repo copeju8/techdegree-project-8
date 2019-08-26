@@ -1,26 +1,28 @@
-const Book  = require('/db/models').Book;
+const Book  = require('./db/models').Book;
 const express = require('express');
 const router  = express.Router();
 const path = require('path');
+const Sequelize = require('sequelize');
+
 
 function find(id) {
     var matchedbooks = books.filter(function(book) { return book.id == id; });
     return matchedbooks[0];
-  }
+}
   
 /* GET books listing. */
 router.get('/', function(req, res, next) { 
     Book.findAll().then(function(books) {
      res.render("books/index", {articles: article, title: "The Harry Potter Library"}) 
     });  
-  });
+});
   
   /* POST create book. */
   router.post('/', function(req, res, next) {
     Book.create(req.body).then(function(book) {
     res.redirect("/books/" + book.id);
   });
-  
+})
   /* Create a new book form. */
   router.get('/new', function(req, res, next) {
     res.render("books/new", {book: Book(), title: "New Book"});
@@ -67,6 +69,7 @@ router.get('/', function(req, res, next) {
   
     res.redirect("/books");
   });
+
   
   
   module.exports = router;
@@ -151,7 +154,6 @@ router.get('/', function(req, res, next) {
 // })
     
     
-
 
 
 

@@ -1,76 +1,59 @@
 //Model in sync with db structure with customValidator https://sequelize.org/master/manual/models-definition.html#validations
 
-const Sequelize = require('sequelize');
-
-const connection = new Sequelize('Books');
-
-module.exports = (sequelize) => {
-    class Books extends Sequelize.Model  {}
-    Books.init({
-        //Set custom primary key column
-        id: {
-            type: Sequelize.INTEGER,
-            primaryKey: true,
-            autoIncrement: true,
-        },
-        title: {
-            type: Sequelize.STRING,
-            allowNull: false, // disallow null
-            defaultValue: false, //set default value
-            validate: {
-                notNull: {
-                    msg: 'Please provide a value for "title"',
-                },
-                notEmpty: {
-                    msg: ' Error - please re-enter' ,
-                },
-            },
-        },
-       author: { 
-            type: Sequelize.STRING,
-            allowNull: false,
-            defaultValue: false,
-            validate: {
-                notNull: {
-                    msg: "Please enter an author's name",
-                },   
-                notEmpty: {
-                    msg: "Please provide a value for 'author'",
-                },
-            },    
-        },
-        genre: {
-            type: Sequelize.STRING,
-            allowNull: false,  
-            defaultValue: false,
-            validate: {
-                notNull: {
-                    msg: "Please enter an author's genre",
-                },   
-                notEmpty: {
-                    msg: "Please provide a value for 'genre'",
-                },
-            }, 
-        },    
-        year: {
-            type: Sequelize.INTEGER,
-            allowNull: false,  
-            defaultValue: false,
-            validate: {
-                notNull: {
-                    msg: "Please enter a year - YYYY",
-                },   
-                notEmpty: {
-                    msg: "Please provide a value for 'year'- YYYY",
-                },
-            }, 
-        },    
-
-    }, { sequelize });
-
-    return Books;
-};
-
-Books.associate = (models) => {
-    Books.belongsTo(models.Books);
+'use strict';
+module.exports = (sequelize, DataTypes) => {
+  const Book = sequelize.define('Book', {
+    id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+    },
+    title: {
+        type: Sequelize.STRING,
+        allowNull: false, // disallow null
+        validate: {
+            notEmpty: true, 
+            max: 30
+        }
+    },
+    author: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        validate: {
+            is: ["^[a-z]+$",'i'],
+            notEmpty: true, 
+            max: 25
+        }      
+    }, 
+    genre: {
+        type: Sequelize.STRING,
+        allowNull: false, 
+        validate: {
+            isAlpha: true,                   
+        }     
+    }, 
+    year: {
+        type: Sequelize.INTEGER,
+        allowNull: false, 
+        validate: {
+            isNumeric: true,          
+        }      
+    } 
+  }, {
+    classMethods: {
+      associate: function(models) {
+        // associations can be defined here
+      }
+    },
+    instanceMethods: {
+      publishedAt: function() {
+        return dateFormat(this.createdAt, "dddd, mmmm dS, yyyy, h:MM TT");
+      },
+      shortDescription: function(){ 
+        return this.body.length > 30 ? this.body.substr(0, 30) + "..." : this.body;
+      }
+    }
+  });
+  return Book;
+  v
 };

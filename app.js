@@ -3,6 +3,7 @@ const Sequelize = require('sequelize');
 // const sqlite = require('sqlite');
 const express = require('express');
 const bodyParser = require('body-parser');
+const Book = require("./models").Book;
 const db = require('./config/config');
 const app = express();
 const path = require('path');
@@ -31,28 +32,10 @@ app.use((error, req, res, next) => {
 });
 
 
-// (async () => {
-//   await db.sequelize.sync({ force: true });
 
-//   try {
-
-//     // ... All model instances
-
-//     const books = await Book.findAll({
-//       attributes: ['id', 'title'], // return only id and title
-//       where: {
-//         isAvailableOnVHS: true,
-//       },
-//     });
-//     console.log( books.map(book => book.toJSON()) );
-
-//   } catch(error) {
-//     //
-//   }
-// });
     const PORT = process.env.PORT || 3000;
       app.listen(PORT, () =>  {
         console.log(`application is running on port ${PORT}` );
     });
-  // });
+
 

@@ -1,78 +1,243 @@
-const Book  = require('./db/models').Book;
+const Books  = require('../models/books');
 const express = require('express');
 const router  = express.Router();
 const path = require('path');
-const Sequelize = require('sequelize');
 
 
-function find(id) {
-    var matchedbooks = books.filter(function(book) { return book.id == id; });
-    return matchedbooks[0];
-}
-  
-/* GET books listing. */
-router.get('/', function(req, res, next) { 
-    Book.findAll().then(function(books) {
-     res.render("books/index", {articles: article, title: "The Harry Potter Library"}) 
-    });  
+router.get('/', (req, res) => {  
+    Books.findAll()
+    .then(books => {
+      res.render('index', {books: books });
+      console.log('hi');     
+    })             
+    })
+    .catch(err => {
+    console.log({err});
 });
-  
-  /* POST create book. */
-  router.post('/', function(req, res, next) {
-    Book.create(req.body).then(function(book) {
-    res.redirect("/books/" + book.id);
-  });
-})
-  /* Create a new book form. */
-  router.get('/new', function(req, res, next) {
-    res.render("books/new", {book: Book(), title: "New Book"});
-  });
-  
-  /* Edit book form. */
-  router.get("/:id/edit", function(req, res, next){
-    const book = find(req.params.id);  
-  
-    res.render("books/edit", {book: book, title: "Edit book"});
-  });
-  
-  
-  /* Delete book form. */
-  router.get("/:id/delete", function(req, res, next){
-    var book = find(req.params.id);  
-    
-    res.render("books/delete", {book: book, title: "Delete book"});
-  });
-  
-  
-  /* GET individual book. */
-  router.get("/:id", function(req, res, next){
-    var book = findById(req.params.id).then(function(book) {
-    res.render("books/show", {book: book, title: book.title});
-  });
-})
-  
-  /* PUT update book. */
-  router.put("/:id", function(req, res, next){
-    var book = find(req.params.id);
-    book.title = req.body.title;
-    book.body = req.body.body;
-    book.author = req.body.author;
-    
-    res.redirect("/books/" + book.id);    
-  });
-  
-  /* DELETE individual book. */
-  router.delete("/:id", function(req, res, next){
-    var book = find(req.params.id);  
-    var index = books.indexOf(book);
-    books.splice(index, 1);
-  
+
+router.get('/new', (req, res, next) => {
+  Books.create({
+    title: req.body.title,
+    author: req.body.author,
+    genre: req.body.genre,
+    year: req.body.year
+  })
+
+  .then(book => {
     res.redirect("/books");
-  });
+  })
+  .catch(err => {
+    const error = Error("Server Error");
+    error.status = 500;
+    next(error);
+  }); 
+});   
+
+router.get('/:id', (req, res, next) => {
+  Books.findByPk(req.param.id)
+      .then(book => {
+        if (book) {
+          res.render("update-book", {
+            book: book,
+            title: body.title,
+            author: body.author,
+            genre: body.genre,
+            year: body.year
+          })
+          
+      }
+    
+      })
+      .catch(err => {
+        const error = Error("Server Error");
+        error.status = 500;
+        next(error);
+      }); 
+
+    /* Delete book form. */
+  router.post("/:id/delete",(req, res, next) => {
+    Books = findByPk(req.params.id)  
+      .then(book =>  {
+        if(book) {
+          return book.destroy();
+        } else {
+           res.send(404);
+        } 
+      })
+      .then(()  =>  {
+        res.redirect("/books");
+      })
+      .catch(err => {
+        const error = new Error("Server Error");
+        error.status = 500;
+        next(error);
+      });
+    });
+  
+    module.exports = router;
+
+
+
+
+// app.listen(3000, () =>  {                                               //Set up developer server using the listening method with port - an express app
+//     console.log('The application is running on localhost:3000!')        //Send request through local host
+// })
+
+// function find(id) {
+//     var matchedbooks = books.filter(function(book) { return book.id == id; });
+//     return matchedbooks[0];
+// }
+  
+// /GET books listing 
+// router.get('/', function(req, res, next) { 
+//     models.Book.findAll().then(function(books) {
+//      res.render("index", {
+//        title: "The Harry Potter Library",
+//        books: book, 
+//     }); 
+//   });  
+// });
+
+//   /* POST create book. */
+//   router.post('/', function(req, res, next) {
+//     Book.create(req.body).then(function(book) {
+//     res.redirect("/books/" + book.id);
+//   });
+// })
+//   /* Create a new book form. */
+//   router.get('/new', function(req, res, next) {
+//     res.render("books/new", {book: Book(), title: "New Book"});
+//   });
+  
+//   /* Edit book form. */
+//   router.get("/:id/edit", function(req, res, next){
+//     const book = find(req.params.id);  
+  
+//     res.render("books/edit", {book: book, title: "Edit book"});
+//   });
+  
+  
+//   /* Delete book form. */
+//   router.get("/:id/delete", function(req, res, next){
+//     var book = find(req.params.id);  
+    
+//     res.render("books/delete", {book: book, title: "Delete book"});
+//   });
+  
+  
+//   /* GET individual book. */
+//   router.get("/:id", function(req, res, next){
+//     var book = findById(req.params.id).then(function(book) {
+//     res.render("books/show", {book: book, title: book.title});
+//   });
+// })
+  
+//   /* PUT update book. */
+//   router.put("/:id", function(req, res, next){
+//     var book = find(req.params.id);
+//     book.title = req.body.title;
+//     book.body = req.body.body;
+//     book.author = req.body.author;
+    
+//     res.redirect("/books/" + book.id);    
+//   });
+  
+//   /* DELETE individual book. */
+//   router.delete("/:id", function(req, res, next){
+//     var book = find(req.params.id);  
+//     var index = books.indexOf(book);
+//     books.splice(index, 1);
+  
+//     res.redirect("/books");
+//   });
+
+//   module.exports = router;
+
+// app.use(bodyParser.json());
+// app.use(express.static(_dirname + '/static'));
+
+// sequelize.sync()
+
+// app.use(bodyParser.urlencoded({ extended: false}));
+// app.set('view engine', 'pug');  
+
+// function find(id) {
+//     var matchedbooks = books.filter(function(book) { return book.id == id; });
+//     return matchedbooks[0];
+// }
+
+// app.get('/', (req, res) => {               
+//       res.render('index', { books });      
+//   });  console.log({books});
+
+// app.get('/', (req, res) => {
+//   res.render('index')
+
+// })
+
+// /* GET books listing. */
+// router.get('/', function(req, res, next) { 
+//     Book.findAll().then(function(books) {
+//      res.render("books/index", {articles: article, title: "The Harry Potter Library"}) 
+//     });  
+// });
+  
+//   /* POST create book. */
+//   router.post('/', function(req, res, next) {
+//     Book.create(req.body).then(function(book) {
+//     res.redirect("/books/" + book.id);
+//   });
+// })
+//   /* Create a new book form. */
+//   router.get('/new', function(req, res, next) {
+//     res.render("books/new", {book: Book(), title: "New Book"});
+//   });
+  
+//   /* Edit book form. */
+//   router.get("/:id/edit", function(req, res, next){
+//     const book = find(req.params.id);  
+  
+//     res.render("books/edit", {book: book, title: "Edit book"});
+//   });
+  
+  
+//   /* Delete book form. */
+//   router.get("/:id/delete", function(req, res, next){
+//     var book = find(req.params.id);  
+    
+//     res.render("books/delete", {book: book, title: "Delete book"});
+//   });
+  
+  
+//   /* GET individual book. */
+//   router.get("/:id", function(req, res, next){
+//     var book = findById(req.params.id).then(function(book) {
+//     res.render("books/show", {book: book, title: book.title});
+//   });
+// })
+  
+//   /* PUT update book. */
+//   router.put("/:id", function(req, res, next){
+//     var book = find(req.params.id);
+//     book.title = req.body.title;
+//     book.body = req.body.body;
+//     book.author = req.body.author;
+    
+//     res.redirect("/books/" + book.id);    
+//   });
+  
+//   /* DELETE individual book. */
+//   router.delete("/:id", function(req, res, next){
+//     var book = find(req.params.id);  
+//     var index = books.indexOf(book);
+//     books.splice(index, 1);
+  
+//     res.redirect("/books");
+//   });
 
   
   
-  module.exports = router;
+//   module.exports = router;
 
 
 
@@ -154,7 +319,6 @@ router.get('/', function(req, res, next) {
 // })
     
     
-
 
 
 

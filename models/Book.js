@@ -44,10 +44,9 @@ module.exports = (sequelize) => {
         }      
     }, 
    // Model options object
-    book: 'my_movies_table', // table name change
+    book: 'Library of Wonder', // table name change
     sequelize 
-  },
-    }, { sequelize });
+  },{ sequelize });
   
     return Book;
 };  

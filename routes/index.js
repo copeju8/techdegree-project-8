@@ -6,25 +6,31 @@ const path = require('path');
 const Sequelize = require('sequelize')
 const Op = Sequelize.Op;
 
+// router.get("/", (req, res) => {   
+//   res.redirect("/books");
+// });
+
+//Find book list
 router.get('/books', (req, res, next) => {  
     Book.findAll()
     .then(books => {
-      res.render('index', {books: books });
-      
-
+      res.render('index', {
+        books: books 
+      });     
     })             
-    .catch(err => {
-    console.log({err});
-  });
+    .catch(err => console.log(err))
 });
 
-router.get('/new', (req, res, next) => {
+//Create book form
+router.get('/books/new', (req, res, next) => {
+  res.render("new-book");
+});
   Book.create({
     title: req.body.title,
     author: req.body.author,
     genre: req.body.genre,
     year: req.body.year
-  })
+
 
   .then(book => {
     res.redirect("/books");
@@ -33,7 +39,7 @@ router.get('/new', (req, res, next) => {
     const error = Error("Server Error");
     error.status = 500;
     next(error);
-  }); 
+  }) 
 });   
 
 router.get('/:id', (req, res, next) => {
@@ -74,7 +80,7 @@ router.get('/:id', (req, res, next) => {
         next(error);
       });
   });
-  
+
     module.exports = router;
 
-  
+ 

@@ -1,22 +1,25 @@
-const Books  = require('../models/Book');
+// Configures the Sequelize ORM
+const Book  = require('../models/Book');
 const express = require('express');
 const router  = express.Router();
 const path = require('path');
+const Sequelize = require('sequelize')
 const Op = Sequelize.Op;
 
-router.get('/', (req, res) => {  
-    Books.findAll()
+router.get('/books', (req, res, next) => {  
+    Book.findAll()
     .then(books => {
       res.render('index', {books: books });
-      // console.log('hi');     
+      
+
     })             
-    })
     .catch(err => {
     console.log({err});
+  });
 });
 
 router.get('/new', (req, res, next) => {
-  Books.create({
+  Book.create({
     title: req.body.title,
     author: req.body.author,
     genre: req.body.genre,
@@ -34,7 +37,7 @@ router.get('/new', (req, res, next) => {
 });   
 
 router.get('/:id', (req, res, next) => {
-  Books.findByPk(req.params.id)
+  Book.findByPk(req.params.id)
       .then(book => {
         if (book) {
           res.render("update-book", {
@@ -54,7 +57,7 @@ router.get('/:id', (req, res, next) => {
     });    
     /* Delete book form. */
   router.post("/:id/delete",(req, res, next) => {
-    Books = findByPk(req.params.id)  
+    Book = findByPk(req.params.id)  
       .then(book =>  {
         if(book) {
           return book.destroy();

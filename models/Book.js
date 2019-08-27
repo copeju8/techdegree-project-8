@@ -1,16 +1,10 @@
 //Model in sync with db structure with customValidator https://sequelize.org/master/manual/models-definition.html#validations
-const Sequelize = require('sequelize');
 
-module.exports = (sequelize) => {
-  class Book extends Sequelize.Model {}
-  Book.init({
-    id: {
-        type: Sequelize.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
-    },
+'use strict';
+module.exports = (sequelize, DataTypes) => {
+    const Book = sequelize.define('Book', {
     title: {
-        type: Sequelize.STRING,
+        type: DataTypes.STRING,
         allowNull: false, // disallow null
         validate: {
             notEmpty: true, 
@@ -19,7 +13,7 @@ module.exports = (sequelize) => {
         }
     },
     author: {
-        type: Sequelize.STRING,
+        type: DataTypes.STRING,
         allowNull: false,
         validate: {
             is: ["^[a-z]+$",'i'],
@@ -29,24 +23,28 @@ module.exports = (sequelize) => {
         }      
     }, 
     genre: {
-        type: Sequelize.STRING,
+        type: DataTypes.STRING,
         allowNull: false, 
         validate: {
             isAlpha: true,                   
         }     
     }, 
     year: {
-        type: Sequelize.INTEGER,
+        type: DataTypes.INTEGER,
         allowNull: false, 
         validate: {
             isNumeric: true,  
             msg: 'Please enter a year - format XXXX.',        
         }      
-    }, 
-   // Model options object
-    book: 'Library of Wonder', // table name change
-    sequelize 
-  },{ sequelize });
+    } 
+  });
   
-    return Book;
-};  
+ Book.associate = function(models) {
+//associations can be defined here
+  };
+return Book;
+//    // Model options object
+//     book: 'Library of Wonder', // table name change
+//     sequelize 
+};
+

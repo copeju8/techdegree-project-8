@@ -1,6 +1,5 @@
 const express = require("express");
 const sequelize = require("./models").sequelize;
-const path = require("path");
 const Op = require("sequelize").Op;
 const parser = require("body-parser");
 const app = express();
@@ -8,9 +7,8 @@ const port = 3000;
 const Book = require("./models").Book;
 const itemsPerPage = 15;
 
-app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "pug");
-app.use(express.static(path.join(__dirname, "public")));
+app.use("/static", express.static("public"));
 app.use(parser.urlencoded({ extended: false }));
 
  //Routes
@@ -25,7 +23,7 @@ app.post("/books", (req, res) => {
   res.redirect(`/books/?column=${req.body.column}&searchKeyWord=${req.body.searchKeyWord}&&page=1`);
 });
 
-//search books to get total number of pages.
+// search books to get total number of pages.
 app.get("/books", (req, res) => {
   const column = req.query.column || "title";
   const searchKeyWord = req.query.searchKeyWord || "";
@@ -89,7 +87,7 @@ app.post("/books/new", (req, res) => {
     });
 });
 
-// //show book detail form
+//show book detail form
 app.get("/books/:id", (req, res) => {
   Book.findByPk(req.params.id)
     .then(book => {
@@ -171,8 +169,9 @@ app.use((err, req, res, next) => {
   }
 });
 
-
+//
 //table creation and port message
+//
 sequelize.sync().then(() => {
   app.listen(port, () => {
     console.log(`application running on port ${port}`);

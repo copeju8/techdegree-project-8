@@ -1,28 +1,21 @@
 extends layout
 
 block content
-    form(action='/books/new' methods='POST', id='create-book')
-        h1 New Book
-        if(errors)
-            h2
-            ul.error
-                each error in errors
-                    li=error.message
-        p
-            label(for='title') Title
-            input#title(name='title' type='text')
-        p
-            label(for='author') Author
-            input#author(name='author' type='text')
-        p
-            label(for='genre') Genre
-            input#genre(name='genre' type='text')
-        p
-            label(for='year') Year
-            input#year(name='year' type='text')
-
-        div  
-            p.buttons-new
-                input(type='submit' value='Create New Book', id='create-button')
-            p.buttons-new
-                a.button(href='/books', id='cancel-create') Cancel
+  h1 New Book
+    form(action='/books/new',method='post')
+      p
+        label(for='title') Title
+        input#title(name='title', type='text')
+      p
+        label(for='author') Author
+        input#author(name='author', type='text')
+      p
+        label(for='genre') Genre
+        input#genre(name='genre', type='text')
+      p
+        label(for='year') Year
+        input#year(name='year', type='text')
+      p
+        input(type='submit')
+      p
+        a.button(href='/books/page/0') Cancel

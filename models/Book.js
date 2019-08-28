@@ -8,11 +8,10 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false, // disallow null
             validate: {
                 notEmpty: {
-                    msg: 'Please provide a title.',
-                max: 30
+                    msg: 'Please provide a title.'
+                }
             }
-          }
-        },  
+        },
         author: {
             type: DataTypes.STRING,
             allowNull: false,
@@ -21,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
                 max: 25,
                 notEmpty: {
                     msg: 'Please provide a name of an author.'
-                }  
+                }
             }
         },
         genre: {
@@ -36,13 +35,13 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             validate: {
                 isNumeric: {
-                msg: 'Please enter a year - format XXXX.'
+                    msg: 'Please enter a year - format XXXX.'
                 }
             }
         }
     });
-        Book.associate = function (models) {
+    Book.associate = function (models) {
         //associations can be defined here
     }
     return Book;
-};  
+};

@@ -1,21 +1,27 @@
-extends layout
+extends layout.pug
 
 block content
   h1 New Book
-    form(action='/books/new',method='post')
-      p
-        label(for='title') Title
-        input#title(name='title', type='text')
-      p
-        label(for='author') Author
-        input#author(name='author', type='text')
-      p
-        label(for='genre') Genre
-        input#genre(name='genre', type='text')
-      p
-        label(for='year') Year
-        input#year(name='year', type='text')
-      p
-        input(type='submit')
-      p
-        a.button(href='/books/page/0') Cancel
+  if(errors)
+    h2.error An error has occurred
+    ul.error
+      each error in errors
+        li=error.message
+  form(action='/books/new',method='post')
+    p
+      label(for='title') Title
+      input#title(name='title', type='text')
+    p
+      label(for='author') Author
+      input#author(name='author', type='text')
+    p
+      label(for='genre') Genre
+      input#genre(name='genre', type='text')
+    p
+      label(for='year') Year
+      input#year(name='year', type='text')
+    p
+      input(type='submit')
+    p
+      a.button(href='/books') Cancel
+

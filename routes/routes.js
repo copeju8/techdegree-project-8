@@ -45,55 +45,40 @@ app.get('/books/new', (req, res, next) => {
 
 //ROUTE: defining post /books/new route
 app.post("/books/new", (req, res) => {
-  const book = app.get('models').Book;
+  const Book = app.get('models').Book;
   Book.create({
-    title: req.body.title,
-    author: req.body.author,
-    genre: req.body.genre,
-    year: req.body.year,
-  })
-  .then(() =>{
-    res.redirect("/books"); 
-    console.log("app.get");
-  });
-})  
-
-
-
-//post new book to database
-app.post("/books/new", (req, res) => {
-  console.log("app.zero");
-  Book.create(req.body)
+      title: req.body.title,
+      author: req.body.author,
+      genre: req.body.genre,
+      year: req.body.year,
+    })
     .then(() => {
-      console.log("app.one");
-      // res.redirect("/booksList");
+      res.redirect("/books");
     })
     .catch(err => {
       if (err.name === "SequelizeValidationError") {
-        console.log("app.two");
-        res.render("new-book", { errors: err.errors, book: req.body});
+        res.render("new-book", {
+          book: Book.build(req.body),
+          errors: err.errors
+        });
       } else {
-        console.log("app.three");
         throw err;
       }
     })
     .catch(err => {
-      console.log("app.four");
-      res.render("error", { err });
+      res.render("error", {
+        err
+      });
     });
 });
 
-
-
-
-
-//Update Create book form
-app.get("books/:id", (req, res, next) => {
+//ROUTE: Define route to display update form
+app.get("/books/:id", (req, res, next) => {
   const Book = app.get("models").Book;
   Book.findByPk(req.params.id)
     .then(function (book) {
       if (book) {
-        return book.update(req.body);
+        res.render('update-book');
       }
     })
     .then(() => {
@@ -112,7 +97,7 @@ app.get("books/:id", (req, res, next) => {
           errors: err.errors
         });
       } else {
-        throw error;
+        throw err;
       }
     })
     .catch((err) => {
@@ -121,9 +106,6 @@ app.get("books/:id", (req, res, next) => {
       next(error);
     })
 });
-
-
-
 
 
 /* Delete book form. */

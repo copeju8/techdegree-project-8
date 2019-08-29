@@ -13,7 +13,17 @@ app.listen(portNumber);
 console.log("App started on localhost at port " + portNumber);
 
 
-
+app.use((err, req, res, next) => {
+  res.locals.errors = err;
+  res.status(err.status);
+  if (err.message === "Page not found") {
+    res.render("page-not-found");
+  } else {
+    res.render("error", {
+      err
+    });
+  }
+});
 
 
 

@@ -16,10 +16,9 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false,
             validate: {
-                is: ["^[a-z]+$", 'i'],
-                max: 25,
+                // is: ["^[a-z]+$", 'i'],
                 notEmpty: {
-                    msg: 'Please provide a name of an author.'
+                    msg: "Please provide an author's name."
                 }
             }
         },
@@ -27,7 +26,9 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false,
             validate: {
-                isAlpha: true,
+                notEmpty: {
+                    msg: "Please provide a literary genre (e.g. Classic, SciFi. etc..)."
+                }
             }
         },
         year: {
@@ -35,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             validate: {
                 isNumeric: {
-                    msg: 'Please enter a year - format XXXX.'
+                    msg: 'Please enter a year - numbers only.'
                 }
             }
         }

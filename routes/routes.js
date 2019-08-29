@@ -1,6 +1,8 @@
 // Configures the Sequelize ORM
 const express = require('express');
 const app = express();
+const Book = app.get("models").Book;
+
 
 //Specify path to pug
 const path = require('path');
@@ -74,11 +76,12 @@ app.post("/books/new", (req, res) => {
 
 //ROUTE: Define route to display update form
 app.get("/books/:id", (req, res, next) => {
-  const Book = app.get("models").Book;
   Book.findByPk(req.params.id)
     .then(function (book) {
       if (book) {
-        res.render('update-book');
+        res.render('update-book', {
+          book: book
+        });
       }
     })
     .then(() => {
@@ -107,6 +110,40 @@ app.get("/books/:id", (req, res, next) => {
     })
 });
 
+//Update book info into database
+app.post("/books/:id", (req, res) => {
+  Book.findByPk(req.params.id)
+    .then(function (book) {
+      if (book) {
+        return book
+          .update(req.body)
+          .then(function (book) {
+            res.redirect("/books");
+          })
+          .catch(err => {
+            if (err.name === "SequelizeValidationError") {
+              res.render("update-book", {
+                errors: err.errors,
+                book: req.body,
+                bookId: req.params.id
+              });
+            } else {
+              res.render("error", {
+                err
+              });
+            }
+          });
+      } else {
+        const err = new Error("The book doesn't exist");
+        throw err;
+      }
+    })
+    .catch(err => {
+      res.render("error", {
+        err
+      });
+    });
+});
 
 /* Delete book form. */
 app.post("/:id/delete", (req, res, next) => {

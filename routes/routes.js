@@ -40,7 +40,7 @@ app.get('/books', (req, res, next) => {
     .catch(err => console.log(err))
 });
 
-//Create book form
+//Create new book 
 app.get('/books/new', (req, res, next) => {
   res.render("new-book");
 });
@@ -133,8 +133,9 @@ app.post("/books/:id", (req, res) => {
 });
 
 /* Delete book form. */
-app.post("/:id/delete", (req, res, next) => {
-  Book = findByPk(req.params.id)
+app.post("/books/:id/delete", (req, res, next) => {
+  const Book = app.get("models").Book;
+  Book.findByPk(req.params.id)
     .then(book => {
       if (book) {
         return book.destroy();

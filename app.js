@@ -1,4 +1,3 @@
-
 //importing the express app established in routes/routes.js
 const app = require('./routes/routes');
 
@@ -12,17 +11,19 @@ const portNumber = 3000;
 app.listen(portNumber);
 console.log("App started on localhost at port " + portNumber);
 
-
+//Global error handler for page-not-found & non-existent route
+app.use((req, res, next) => {
+  const err = new Error('Page Not Found');
+  err.status = 404;
+  console.error(err);
+  res.status(404);
+  res.render('page-not-found');
+});
+//Logs server error
 app.use((err, req, res, next) => {
-  res.locals.errors = err;
-  res.status(err.status);
-  if (err.message === "Page not found") {
-    res.render("page-not-found");
-  } else {
-    res.render("error", {
-      err
-    });
-  }
+  console.error(err);
+  res.status(500);
+  res.render('error');
 });
 
 

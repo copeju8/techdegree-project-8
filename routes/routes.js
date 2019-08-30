@@ -1,7 +1,7 @@
 // Configures the Sequelize ORM
 const express = require('express');
 const app = express();
-const Book = app.get("models").Book;
+// const Book = app.get("models").Book;
 
 
 //Specify path to pug
@@ -76,33 +76,39 @@ app.post("/books/new", (req, res) => {
 
 //ROUTE: Define route to display update form
 app.get("/books/:id", (req, res, next) => {
+  const Book = app.get("models").Book;
   Book.findByPk(req.params.id)
     .then(function (book) {
       if (book) {
         res.render('update-book', {
           book: book
         });
-      }
-    })
-    .then(() => {
-      res.redirect("/books");
-    })
-    .catch(err => {
-      if (err.name === 'SequelizeValidationError') {
-        const book = Book.build(req.body);
-        book.id = req.params.id;
-        res.render("update-book", {
-          book: book,
-          title: book.title,
-          author: book.author,
-          genre: book.genre,
-          year: book.year,
-          errors: err.errors
-        });
       } else {
-        throw err;
+        next({
+          status: 400,
+          message: " This book is not available"
+        })
       }
     })
+    // .then(() => {
+    //   res.redirect("/books");
+    // })
+    // .catch(err => {
+    //   if (err.name === 'SequelizeValidationError') {
+    //     const book = Book.build(req.body);
+    //     book.id = req.params.id;
+    //     res.render("update-book", {
+    //       book: book,
+    //       title: book.title,
+    //       author: book.author,
+    //       genre: book.genre,
+    //       year: book.year,
+    //       errors: err.errors
+    //     });
+    //   } else {
+    //     throw err;
+    //   }
+    // })
     .catch((err) => {
       const error = new Error("Server Error");
       error.status = 500;
@@ -112,29 +118,25 @@ app.get("/books/:id", (req, res, next) => {
 
 //Update book info into database
 app.post("/books/:id", (req, res) => {
+  const Book = app.get("models").Book;
   Book.findByPk(req.params.id)
     .then(function (book) {
       if (book) {
-        return book
-          .update(req.body)
-          .then(function (book) {
-            res.redirect("/books");
-          })
-          .catch(err => {
-            if (err.name === "SequelizeValidationError") {
-              res.render("update-book", {
-                errors: err.errors,
-                book: req.body,
-                bookId: req.params.id
-              });
-            } else {
-              res.render("error", {
-                err
-              });
-            }
-          });
+        return book.update(req.body)
+      }
+    })
+    .then(function () {
+      res.redirect("/books");
+    })
+    .catch(err => {
+      if (err.name === "SequelizeValidationError") {
+        const book = Book.build(req.body);
+        book.id = req.params.id;
+        res.render("update-book", {
+          book: book,
+          errors: err.errors,
+        });
       } else {
-        const err = new Error("The book doesn't exist");
         throw err;
       }
     })

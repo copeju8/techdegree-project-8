@@ -134,8 +134,12 @@ app.post("/books/:id", (req, res) => {
         book.id = req.params.id;
         res.render("update-book", {
           book: book,
-          errors: err.errors,
-        });
+          title: book.title,
+          author: book.author,
+          genre: book.genre,
+          year: book.year,
+          errors: err.errors
+        })
       } else {
         throw err;
       }

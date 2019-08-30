@@ -6,7 +6,7 @@ body {
 }
 
 a {
-  color: #019875;
+  color: #771515;
   text-decoration: none;
   font-weight: bold;
   transition: 0.4s;
@@ -48,6 +48,12 @@ ul {
   list-style-type: none;
   margin-bottom: 10px;
   line-height: 1.3em;
+}
+
+
+h1 {
+  color: #443838;
+  font-family: Georgia, serif;  
 }
 
 h2 {

@@ -7,7 +7,7 @@ block content
     ul.error
       each error in errors
         li=error.message
-    form(action="/books/" + book.id, method="post", class="update-form")
+  form(action="/books/" + book.id, method="post", class="update-form")
       p
           label(for="title") Title
           input#title(name="title", type="text", value=book.title)
@@ -22,7 +22,8 @@ block content
           input#year(name="year", type="text", value=book.year)
       p    
           input(type="submit", value="Update Book")
+  form(action="/books/" + book.id + '/delete', method="post", class="delete-form")   
       p 
-            a.button(href="/books", id="cancel") Cancel
+          a.button(href="/books", id="cancel") Cancel
       p      
-            input(type="submit", value="Delete Book")
+          input(type="submit", value="Delete Book")

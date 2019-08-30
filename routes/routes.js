@@ -90,28 +90,9 @@ app.get("/books/:id", (req, res, next) => {
         })
       }
     })
-    // .then(() => {
-    //   res.redirect("/books");
-    // })
-    // .catch(err => {
-    //   if (err.name === 'SequelizeValidationError') {
-    //     const book = Book.build(req.body);
-    //     book.id = req.params.id;
-    //     res.render("update-book", {
-    //       book: book,
-    //       title: book.title,
-    //       author: book.author,
-    //       genre: book.genre,
-    //       year: book.year,
-    //       errors: err.errors
-    //     });
-    //   } else {
-    //     throw err;
-    //   }
-    // })
     .catch((err) => {
-      const error = new Error("Server Error");
-      error.status = 500;
+      const error = new Error("Non-existent book - please click on home link and try again.");
+      error.status = 400;
       next(error);
     })
 });
